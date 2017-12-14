@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>3D Scanner</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/vue.js"></script>
+
+    <style>
+    .thumbnail {
+        width: 100%;
+        max-height: 300px;
+        max-width: 397px;
+    }
+    body {
+        padding-top: 70px;
+    }
+    </style>
+
+</head>
+<body>
+
+<div id="app">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <span class="navbar-brand" href="#">
+                    3D Scanner Camera Coordinator
+                </span>
+                <input type="button" value="Take Photo" class="btn btn-success navbar-btn" v-on:click="takePhoto">
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-3" v-for="photo in photos">
+                <img :src="photo.imagePath" class="thumbnail">
+                <div class="caption">
+                    <h3>{{ photo.cameraName }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                Connected Cameras: <span id="cameraCount">{{ cameras.length }}</span>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>IP</th>
+                            <th>Last Checkin</th>
+                            <th>Photo Status</th>
+                            <th>Photo Error</th>
+                            <th>Version</th>
+                            <th>New Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cameraList">
+                        <tr v-for="camera in orderedCameras" v-bind:class="{ danger: camera.lastUpdateProblem }">
+                            <td>{{ camera.name }}</td>
+                            <td>{{ camera.ipAddress }}</td>
+                            <td>{{ camera.timeSinceLastUpdate }}</td>
+                            <td>{{ camera.photoStatus }}</td>
+                            <td>{{ camera.photoError }}</td>
+                            <td>{{ camera.version }}</td>
+                            <td><input type="text" name="deviceName" @keyup.enter="updateName(camera.socketId, $event)"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="button" value="Update Software" class="btn btn-info" v-on:click="updateSoftware">
+            </div>
+        </div>
+    </div>
+
+</div>
+    <script src="/js/socket.io-1.4.5.js"></script>
+    <script src="/js/jquery-3.1.1.slim.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/front-end.js"></script>
+
+</body>
+</html>
